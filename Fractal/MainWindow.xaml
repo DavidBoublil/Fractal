@@ -5,9 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Fractal"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="{Binding Test}" Height="450" Width="800"
         Background="LightGray">
+    <Window.Resources>
+        <local:ViewModel x:Key="ViewModel"/>
+    </Window.Resources>
+    <Window.DataContext>
+        <local:ViewModel/>
+    </Window.DataContext>
+
     <Grid>
-        
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="191,162,0,0" TextWrapping="Wrap" Text="{Binding Test, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
+
     </Grid>
 </Window>
