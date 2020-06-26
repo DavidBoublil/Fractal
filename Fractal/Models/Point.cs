@@ -23,6 +23,9 @@ namespace Fractal.Models
             Next = p;
             p.Previous = this;
         }
+
+        public Point GetCopy() => new Point(X, Y);
+
         public void AddBefore(Point p)
         {
             Previous = p;
@@ -51,17 +54,29 @@ namespace Fractal.Models
             AddBefore(b);
         }
 
+        public double DistanceTo(Point p) => Math.Sqrt((X - p.X) * (X - p.X) + (Y - p.Y) * (Y - p.Y));
+        public double AngleTo(Point p) => AngleTo(p, out _);
+        public double AngleTo(Point p, out double distance)
+        {
+            distance = DistanceTo(p); 
+            return Math.Asin(Math.Abs(Y - p.Y) / distance);
+        }
+
         public static Point operator ++(Point p) => p.Next;
         public static Point operator --(Point p) => p.Previous;
 
-        public IEnumerator<Point> GetEnumerator()
+        // todo: check if works
+        public static Point operator +(Point a, Point b)
         {
-            return new pointEnum(this);
+            a.X += b.X;
+            a.Y += b.Y;
+            return a;
         }
-
-        IEnumerator IEnumerable.GetEnumerator()
+        public static Point operator -(Point a, Point b)
         {
-            return this.GetEnumerator();
+            a.X -= b.X;
+            a.Y -= b.Y;
+            return a;
         }
 
         public Point(double x, double y)
@@ -73,26 +88,37 @@ namespace Fractal.Models
         {
 
         }
+
+        public IEnumerator<Point> GetEnumerator()
+        {
+            return new pointEnum(this);
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
     }
+
     public class pointEnum : IEnumerator<Point>
     {
         public pointEnum(Point p)
         {
             org = p;
             point = p;
-            
+
         }
         Point org;
         public Point point;
-        public Point Current => point++;
+        public Point Current => point;
 
         object IEnumerator.Current => Current;
 
         public void Dispose() { }
-        
+
         public bool MoveNext()
         {
-            return point != null ; // todo: cycle implementation
+            point++;
+            return point != null; // todo: cycle implementation
         }
 
         public void Reset()
