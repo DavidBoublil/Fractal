@@ -1,0 +1,21 @@
+﻿<Window x:Class="Fractal.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Fractal"
+        xmlns:viewModels="clr-namespace:Fractal.ViewModels"
+        xmlns:views="clr-namespace:Fractal.Views"
+        mc:Ignorable="d"
+        Title="{Binding Test}" Height="450" Width="800"
+        Background="LightGray">
+
+    <Window.DataContext>
+        <viewModels:ViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="10,108,0,0" TextWrapping="Wrap" Text="{Binding Test, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
+        <views:ShapeControl DataContext="{Binding ShapeControlVM}" HorizontalAlignment="Left" Height="217" Margin="443,74,0,0" VerticalAlignment="Top" Width="228"/>
+    </Grid>
+</Window>

@@ -9,20 +9,18 @@ namespace Fractal.Models
     public static class Fractal
     {
         /// <summary>
-        /// Creat a fractal on a base shape from a model
+        /// Create a fractal on a base shape from a model
         /// </summary>
         public static void CreateFractal(Model model, Point shape, int iteration)
         {
             // Fractal's number of iterations
             for (int i = 0; i < iteration; i++)
             {
-                Point current = shape.Next;
                 // Support non-closed shapes
-                while (current?.Next !=null && current != shape) 
+                for (Point current = shape.Next; current?.Next != null && current != shape; current++ )
                 {
-                    // Aplly the pattern between the two points
+                    // Apply the pattern between the two points
                     model.ApplyModel(current.Previous, current);
-                    current++;
                 }
             }
         }

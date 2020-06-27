@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fractal
+namespace Fractal.ViewModels
 {
     class ViewModel : INotifyPropertyChanged
     {
@@ -13,15 +13,25 @@ namespace Fractal
 
         public string Test
         {
-            get { return _test; }
+            get => _test;
             set { _test = value; OnPropertyChanged("Test"); }
+        }
+
+        private ShapeControlViewModel _shapeControlVM;
+
+        public ShapeControlViewModel ShapeControlVM
+        {
+            get => _shapeControlVM;
+            set { _shapeControlVM = value; OnPropertyChanged("ShapeControlVM");}
         }
 
         public ViewModel()
         {
             Test = "Test";
+            ShapeControlVM = new ShapeControlViewModel();
         }
 
+        #region INotify boiler plate
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -30,6 +40,7 @@ namespace Fractal
                 var e = new PropertyChangedEventArgs(propertyName);
                 this.PropertyChanged(this, e);
             }
-        }
+        } 
+        #endregion
     }
 }

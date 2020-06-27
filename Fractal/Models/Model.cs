@@ -24,6 +24,7 @@ namespace Fractal.Models
             Point last = first;
 
             Point iterator = First.Next;
+            // todo: change to for
             while (iterator != null)
             {
                 last.AddAfter(iterator.GetCopy());
@@ -34,21 +35,21 @@ namespace Fractal.Models
             return new Tuple<Point, Point>(first, last);
         }
 
+        public void ApplyModel(Tuple<Point, Point> points) => ApplyModel(points.Item1, points.Item2);
+
         public void ApplyModel(Point a, Point b)
         {
-            var copy = GetCopy();
+            Tuple<Point, Point> copy = GetCopy();
 
             // Get the angle and distance (optimized function to calculate distance only once)
             double shapeAngle = a.AngleTo(b, out double shapeDistance);
-
             double scaleFactor = shapeDistance / Distance;
+            
             Rescale(copy, scaleFactor);
             Rotate(copy, shapeAngle);
 
             // insert
             a.InsertRangeAfter(copy.Item1.Next, copy.Item2.Previous);
-            a.AddAfter(copy.Item1.Next);
-            b.AddBefore(copy.Item2.Previous);
         }
 
         private void Rotate(Tuple<Point, Point> copy, double shapeAngle)
