@@ -11,31 +11,58 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
-        <local:Converters x:Key="Converters"></local:Converters>
+        <local:PointToSystemPointConverters x:Key="PointToSystemPointConverters"></local:PointToSystemPointConverters>
     </UserControl.Resources>
-    <Border ClipToBounds="True" CornerRadius="{Binding CornerRadius}" Background="{Binding BackgroundColor}" BorderThickness="1" BorderBrush="Gray">
-        <Border.InputBindings>
-            <MouseBinding Gesture="LeftClick" Command="{Binding UpdateOriginCommand}" CommandParameter="{Binding ElementName=DrawingCanvas}"/>
-        </Border.InputBindings>
-        <Canvas x:Name="DrawingCanvas" Background="Transparent">
-            <Canvas.InputBindings>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="11*"/>
+            <ColumnDefinition Width="149*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="67*"/>
+            <RowDefinition Height="8*"/>
+        </Grid.RowDefinitions>
+        <Border ClipToBounds="True" CornerRadius="{Binding CornerRadius}" Background="{Binding BackgroundColor}" BorderThickness="1" BorderBrush="Gray" Grid.Column="1">
+            <Border.InputBindings>
                 <MouseBinding Gesture="LeftClick" Command="{Binding UpdateOriginCommand}" CommandParameter="{Binding ElementName=DrawingCanvas}"/>
-            </Canvas.InputBindings>
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseMove">
-                    <i:InvokeCommandAction Command="{Binding UpdateOriginCommand}" CommandParameter="{Binding ElementName=DrawingCanvas}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
+            </Border.InputBindings>
+            <Canvas x:Name="DrawingCanvas" Background="Transparent">
+                <Canvas.InputBindings>
+                    <MouseBinding Gesture="LeftClick" Command="{Binding UpdateOriginCommand}" CommandParameter="{Binding ElementName=DrawingCanvas}"/>
+                </Canvas.InputBindings>
 
-            <Line Stroke="gray" StrokeDashArray="2 2" StrokeThickness="1" 
+                <Polygon Stroke="Black" StrokeThickness="2">
+                    <Polygon.Points>
+                        <MultiBinding Converter="{StaticResource PointToSystemPointConverters}" >
+                            <Binding Path="Shape"/>
+                            <Binding Path="XOrigin"/>
+                            <Binding Path="YOrigin"/>
+                        </MultiBinding>
+                    </Polygon.Points>
+                </Polygon>
+
+                <Ellipse Width="6" Height="6" Margin="-3" Fill="Blue" Canvas.Left="{Binding XOrigin}" Canvas.Top="{Binding YOrigin}" />
+
+                <Line Stroke="gray" StrokeDashArray="2 2" StrokeThickness="1" 
                   X1="0" X2="{Binding ElementName=DrawingCanvas, Path=ActualWidth}"
-                  Y1="{Binding OriginPoint.Y}" Y2="{Binding OriginPoint.Y}"/>
-            <Line Stroke="gray" StrokeDashArray="2 2" StrokeThickness="1"
-                  X1="{Binding OriginPoint.X}" X2="{Binding OriginPoint.X}"
+                  Y1="{Binding YOrigin}" Y2="{Binding YOrigin}"/>
+                <Line Stroke="gray" StrokeDashArray="2 2" StrokeThickness="1"
+                  X1="{Binding XOrigin}" X2="{Binding XOrigin}"
                   Y1="0" Y2="{Binding ElementName=DrawingCanvas, Path=ActualHeight}"/>
 
-        </Canvas>
-    </Border>
-
+            </Canvas>
+        </Border>
+        <Slider x:Name="YSlider" Value="{Binding YOrigin, Mode=TwoWay}" Orientation="Vertical" Grid.Column="0" Grid.Row="0" RenderTransformOrigin="0.5,0.5" Minimum="0" Maximum="{Binding ElementName=DrawingCanvas, Path=ActualHeight}">
+            <Slider.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="180"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Slider.RenderTransform>
+        </Slider>
+        <Slider x:Name="XSlider" Value="{Binding XOrigin, Mode=TwoWay}" Grid.Column="1" Margin="0,0" Grid.Row="1" Minimum="0" Maximum="{Binding ElementName=DrawingCanvas, Path=ActualWidth}"/>
+    </Grid>
 </UserControl>
  

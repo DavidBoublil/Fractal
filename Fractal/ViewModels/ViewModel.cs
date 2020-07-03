@@ -33,8 +33,8 @@ namespace Fractal.ViewModels
             Test = "Test";
 
             Point shapTest = new Point(0,0);
-            shapTest.AddAfter(new Point(10,10));
-            shapTest.Next.AddAfter(new Point(20,30));
+            shapTest.AddAfter(new Point(100,100));
+            shapTest.Next.AddAfter(new Point(200,10));
 
             ShapeControlVm = new ShapeControlViewModel();
 

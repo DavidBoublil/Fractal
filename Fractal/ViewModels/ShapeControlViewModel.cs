@@ -27,11 +27,29 @@ namespace Fractal.ViewModels
             set { _backgroundColor = value; OnPropertyChanged(("BackgroundColor")); }
         }
 
-        private Point _originPoint;
         public Point OriginPoint
         {
-            get => _originPoint;
-            set { _originPoint = value; OnPropertyChanged("OriginPoint"); }
+            get => new Point(XOrigin, YOrigin);
+            set
+            {
+                XOrigin = value.X;
+                YOrigin = value.Y;
+                OnPropertyChanged("OriginPoint");
+            }
+        }
+
+        private double _xOrigin;
+        public double XOrigin
+        {
+            get { return _xOrigin; }
+            set { _xOrigin = value; OnPropertyChanged("XOrigin"); }
+        }
+
+        private double _yOrigin;
+        public double YOrigin
+        {
+            get { return _yOrigin; }
+            set { _yOrigin = value; OnPropertyChanged("YOrigin"); }
         }
 
         private Point _shape;
@@ -42,8 +60,10 @@ namespace Fractal.ViewModels
         }
 
         public ShapeControlViewModel()
-        { 
-            OriginPoint = new Point(50,50);
+        {
+            XOrigin = 50;
+            YOrigin = 50;
+
             BackgroundColor = Brushes.AliceBlue;
             CornerRadius = 10;
 
@@ -57,8 +77,9 @@ namespace Fractal.ViewModels
         {
             Canvas canvas = param as Canvas;
             var p = Mouse.GetPosition(canvas);
-            OriginPoint = p;
 
+            XOrigin = p.X;
+            YOrigin = p.Y;
         }
 
         #region INotify boiler plate

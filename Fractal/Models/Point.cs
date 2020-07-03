@@ -59,7 +59,7 @@ namespace Fractal.Models
         public double AngleTo(Point p) => AngleTo(p, out _);
         public double AngleTo(Point p, out double distance)
         {
-            distance = DistanceTo(p); 
+            distance = DistanceTo(p);
             return Math.Asin(Math.Abs(Y - p.Y) / distance);
         }
 
@@ -67,12 +67,8 @@ namespace Fractal.Models
         public static Point operator --(Point p) => p.Previous;
 
         // todo: check if works
-        public static Point operator +(Point a, Point b)
-        {
-            a.X += b.X;
-            a.Y += b.Y;
-            return a;
-        }
+        public static Point operator +(Point a, Point b) => new Point(a.X + b.X, a.Y + b.Y);
+
         public static Point operator -(Point a, Point b)
         {
             a.X -= b.X;
@@ -80,7 +76,7 @@ namespace Fractal.Models
             return a;
         }
 
-        public static implicit operator Point(System.Windows.Point p) => new Point(p.X,p.Y);
+        public static implicit operator Point(System.Windows.Point p) => new Point(p.X, p.Y);
 
         public Point(double x, double y)
         {
@@ -90,6 +86,11 @@ namespace Fractal.Models
         public Point()
         {
 
+        }
+
+        public override string ToString()
+        {
+            return $"({X}, {Y})";
         }
 
         public IEnumerator<Point> GetEnumerator()
