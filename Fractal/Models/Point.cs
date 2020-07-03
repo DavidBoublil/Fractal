@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Fractal.Models
 {
@@ -78,6 +79,8 @@ namespace Fractal.Models
             a.Y -= b.Y;
             return a;
         }
+
+        public static implicit operator Point(System.Windows.Point p) => new Point(p.X,p.Y);
 
         public Point(double x, double y)
         {

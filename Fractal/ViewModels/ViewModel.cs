@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Fractal.Models;
 
 namespace Fractal.ViewModels
 {
@@ -17,18 +18,28 @@ namespace Fractal.ViewModels
             set { _test = value; OnPropertyChanged("Test"); }
         }
 
-        private ShapeControlViewModel _shapeControlVM;
+        private ShapeControlViewModel _shapeControlVm;
 
-        public ShapeControlViewModel ShapeControlVM
+        public ShapeControlViewModel ShapeControlVm
         {
-            get => _shapeControlVM;
-            set { _shapeControlVM = value; OnPropertyChanged("ShapeControlVM");}
+            get => _shapeControlVm;
+            set { _shapeControlVm = value; OnPropertyChanged("ShapeControlVm"); }
         }
+
+        
 
         public ViewModel()
         {
             Test = "Test";
-            ShapeControlVM = new ShapeControlViewModel();
+
+            Point shapTest = new Point(0,0);
+            shapTest.AddAfter(new Point(10,10));
+            shapTest.Next.AddAfter(new Point(20,30));
+
+            ShapeControlVm = new ShapeControlViewModel();
+
+            ShapeControlVm.Shape = shapTest;
+
         }
 
         #region INotify boiler plate
@@ -40,7 +51,7 @@ namespace Fractal.ViewModels
                 var e = new PropertyChangedEventArgs(propertyName);
                 this.PropertyChanged(this, e);
             }
-        } 
+        }
         #endregion
     }
 }

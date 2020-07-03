@@ -3,16 +3,39 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:local="clr-namespace:Fractal"
              xmlns:viewModels="clr-namespace:Fractal.ViewModels"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance viewModels:ShapeControlViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <Border CornerRadius="{Binding CornerRadius}" Background="{Binding BackgroundColor}" BorderThickness="1" BorderBrush="Gray">
-        <Grid>
+    <UserControl.Resources>
+        <local:Converters x:Key="Converters"></local:Converters>
+    </UserControl.Resources>
+    <Border ClipToBounds="True" CornerRadius="{Binding CornerRadius}" Background="{Binding BackgroundColor}" BorderThickness="1" BorderBrush="Gray">
+        <Border.InputBindings>
+            <MouseBinding Gesture="LeftClick" Command="{Binding UpdateOriginCommand}" CommandParameter="{Binding ElementName=DrawingCanvas}"/>
+        </Border.InputBindings>
+        <Canvas x:Name="DrawingCanvas" Background="Transparent">
+            <Canvas.InputBindings>
+                <MouseBinding Gesture="LeftClick" Command="{Binding UpdateOriginCommand}" CommandParameter="{Binding ElementName=DrawingCanvas}"/>
+            </Canvas.InputBindings>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseMove">
+                    <i:InvokeCommandAction Command="{Binding UpdateOriginCommand}" CommandParameter="{Binding ElementName=DrawingCanvas}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
 
-        </Grid>
+            <Line Stroke="gray" StrokeDashArray="2 2" StrokeThickness="1" 
+                  X1="0" X2="{Binding ElementName=DrawingCanvas, Path=ActualWidth}"
+                  Y1="{Binding OriginPoint.Y}" Y2="{Binding OriginPoint.Y}"/>
+            <Line Stroke="gray" StrokeDashArray="2 2" StrokeThickness="1"
+                  X1="{Binding OriginPoint.X}" X2="{Binding OriginPoint.X}"
+                  Y1="0" Y2="{Binding ElementName=DrawingCanvas, Path=ActualHeight}"/>
+
+        </Canvas>
     </Border>
 
 </UserControl>
+ 

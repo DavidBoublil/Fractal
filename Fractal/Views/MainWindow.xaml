@@ -15,7 +15,11 @@
     </Window.DataContext>
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="137*"/>
+            <ColumnDefinition Width="127*"/>
+        </Grid.ColumnDefinitions>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="10,108,0,0" TextWrapping="Wrap" Text="{Binding Test, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
-        <views:ShapeControl DataContext="{Binding ShapeControlVM}" HorizontalAlignment="Left" Height="217" Margin="443,74,0,0" VerticalAlignment="Top" Width="228"/>
+        <views:ShapeControl DataContext="{Binding ShapeControlVm}" Margin="10" Grid.Column="1"/>
     </Grid>
 </Window>
