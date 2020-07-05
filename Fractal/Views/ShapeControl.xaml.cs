@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Fractal.Views
+namespace Converters.Views
 {
     /// <summary>
     /// Interaction logic for ShapeControl.xaml

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Fractal.Views
+namespace Converters.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

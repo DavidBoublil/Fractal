@@ -1,10 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
-using Fractal.Models;
+using Converters.Models;
 
-namespace Fractal
+namespace Converters
 {
     public class PointToSystemPointConverters : IMultiValueConverter
     {
@@ -17,7 +18,8 @@ namespace Fractal
 
             for (Point p = shape; p != null; p++)
             {
-                var temp = p + origin;
+                Point temp = p + origin;
+
                 pointCollection.Add(new System.Windows.Point(temp.X, temp.Y));
             }
 
@@ -30,4 +32,18 @@ namespace Fractal
         }
     }
 
+    public class InverseByHeight : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            double val = values[0] as double? ?? 0;
+            double Height = values[1] as double? ?? 0;
+            return Height - val;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

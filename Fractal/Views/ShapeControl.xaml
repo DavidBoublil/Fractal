@@ -1,22 +1,23 @@
-﻿<UserControl x:Class="Fractal.Views.ShapeControl"
+﻿<UserControl x:Class="Converters.Views.ShapeControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             xmlns:local="clr-namespace:Fractal"
-             xmlns:viewModels="clr-namespace:Fractal.ViewModels"
+             xmlns:local="clr-namespace:Converters"
+             xmlns:viewModels="clr-namespace:Converters.ViewModels"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance viewModels:ShapeControlViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
         <local:PointToSystemPointConverters x:Key="PointToSystemPointConverters"></local:PointToSystemPointConverters>
+        <local:InverseByHeight x:Key="InverseByHeight"/>
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="11*"/>
-            <ColumnDefinition Width="149*"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="19*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="67*"/>
@@ -30,18 +31,23 @@
                 <Canvas.InputBindings>
                     <MouseBinding Gesture="LeftClick" Command="{Binding UpdateOriginCommand}" CommandParameter="{Binding ElementName=DrawingCanvas}"/>
                 </Canvas.InputBindings>
+                <Canvas.LayoutTransform>
+                    <ScaleTransform ScaleX="1" ScaleY="-1" CenterX=".5" CenterY=".5" />
+                </Canvas.LayoutTransform>
 
-                <Polygon Stroke="Black" StrokeThickness="2">
-                    <Polygon.Points>
+                <Ellipse Width="6" Height="6" Margin="-3" Stroke="Blue" Canvas.Left="{Binding XOrigin}" Canvas.Top="{Binding YOrigin}" />
+
+                <Polyline Stroke="Gray" StrokeThickness="2">
+                    <Polyline.Points>
                         <MultiBinding Converter="{StaticResource PointToSystemPointConverters}" >
                             <Binding Path="Shape"/>
                             <Binding Path="XOrigin"/>
                             <Binding Path="YOrigin"/>
                         </MultiBinding>
-                    </Polygon.Points>
-                </Polygon>
+                    </Polyline.Points>
+                </Polyline>
 
-                <Ellipse Width="6" Height="6" Margin="-3" Fill="Blue" Canvas.Left="{Binding XOrigin}" Canvas.Top="{Binding YOrigin}" />
+                <Path Width="6" Height="6" Margin="-3" Fill="Blue" Canvas.Left="{Binding XOrigin}" Canvas.Top="{Binding YOrigin}" />
 
                 <Line Stroke="gray" StrokeDashArray="2 2" StrokeThickness="1" 
                   X1="0" X2="{Binding ElementName=DrawingCanvas, Path=ActualWidth}"
@@ -53,14 +59,7 @@
             </Canvas>
         </Border>
         <Slider x:Name="YSlider" Value="{Binding YOrigin, Mode=TwoWay}" Orientation="Vertical" Grid.Column="0" Grid.Row="0" RenderTransformOrigin="0.5,0.5" Minimum="0" Maximum="{Binding ElementName=DrawingCanvas, Path=ActualHeight}">
-            <Slider.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="180"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Slider.RenderTransform>
+
         </Slider>
         <Slider x:Name="XSlider" Value="{Binding XOrigin, Mode=TwoWay}" Grid.Column="1" Margin="0,0" Grid.Row="1" Minimum="0" Maximum="{Binding ElementName=DrawingCanvas, Path=ActualWidth}"/>
     </Grid>

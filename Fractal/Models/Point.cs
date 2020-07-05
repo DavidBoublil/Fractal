@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Fractal.Models
+namespace Converters.Models
 {
     public class Point : IEnumerable<Point>
     {
@@ -68,13 +68,7 @@ namespace Fractal.Models
 
         // todo: check if works
         public static Point operator +(Point a, Point b) => new Point(a.X + b.X, a.Y + b.Y);
-
-        public static Point operator -(Point a, Point b)
-        {
-            a.X -= b.X;
-            a.Y -= b.Y;
-            return a;
-        }
+        public static Point operator -(Point a, Point b) => new Point(a.X - b.X, a.Y - b.Y);
 
         public static implicit operator Point(System.Windows.Point p) => new Point(p.X, p.Y);
 

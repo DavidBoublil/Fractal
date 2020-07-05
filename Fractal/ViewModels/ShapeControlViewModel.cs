@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using Fractal.Models;
+using Converters.Models;
 
-namespace Fractal.ViewModels
+namespace Converters.ViewModels
 {
     public class ShapeControlViewModel : INotifyPropertyChanged
     {

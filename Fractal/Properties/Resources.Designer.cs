@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Fractal.Properties
+namespace Converters.Properties
 {
 
 

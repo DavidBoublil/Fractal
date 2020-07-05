@@ -61,8 +61,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="RelayCommand.cs" />
-    <Compile Include="PointToSystemPointConverters.cs" />
+    <Compile Include="Converters.cs" />
     <Compile Include="Models\Fractal.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Point.cs" />
