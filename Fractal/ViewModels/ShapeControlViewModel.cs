@@ -56,21 +56,19 @@ namespace Converters.ViewModels
         public Point Shape
         {
             get => _shape;
-            set { _shape = value; OnPropertyChanged("Shape"); }
+            set { _shape = value; 
+                OnPropertyChanged("Shape"); }
         }
 
-        public ShapeControlViewModel()
+        private double _scale;
+
+        public double Scale
         {
-            XOrigin = 50;
-            YOrigin = 50;
-
-            BackgroundColor = Brushes.AliceBlue;
-            CornerRadius = 10;
-
-            //Commands
-            UpdateOriginCommand = new RelayCommand(UpdateOrigin);
-
+            get { return _scale; }
+            set { _scale = value; OnPropertyChanged(nameof(Scale)); }
         }
+
+
 
         public ICommand UpdateOriginCommand { get; set; }
         public void UpdateOrigin(object param)
@@ -82,6 +80,18 @@ namespace Converters.ViewModels
             YOrigin = p.Y;
         }
 
+        public ShapeControlViewModel()
+        {
+            XOrigin = 50;
+            YOrigin = 50;
+            Scale = 1;
+
+            BackgroundColor = Brushes.AliceBlue;
+            CornerRadius = 10;
+
+            //Commands
+            UpdateOriginCommand = new RelayCommand(UpdateOrigin);
+        }
         #region INotify boiler plate
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)

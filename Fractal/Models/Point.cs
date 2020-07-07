@@ -101,8 +101,8 @@ namespace Converters.Models
     {
         public pointEnum(Point p)
         {
-            org = p;
-            point = p;
+            org = new Point() {Next = p};
+            point = org;
 
         }
         Point org;
@@ -115,7 +115,7 @@ namespace Converters.Models
 
         public bool MoveNext()
         {
-            point++;
+            if (point != null) point++;
             return point != null; // todo: cycle implementation
         }
 

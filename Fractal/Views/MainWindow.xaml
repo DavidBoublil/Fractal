@@ -14,12 +14,10 @@
         <viewModels:ViewModel/>
     </Window.DataContext>
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="137*"/>
-            <ColumnDefinition Width="127*"/>
+    <Grid Margin="1,0">
+        <Grid.ColumnDefinitions> 
         </Grid.ColumnDefinitions>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="10,108,0,0" TextWrapping="Wrap" Text="{Binding Test, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
-        <views:ShapeControl DataContext="{Binding ShapeControlVm}" Margin="10" Grid.Column="1"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="99,10,0,0" TextWrapping="Wrap" Text="{Binding Test, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
+        <views:ShapeControl DataContext="{Binding ShapeControlVm}" Margin="99,53" />
     </Grid>
 </Window>

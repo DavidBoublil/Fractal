@@ -26,19 +26,27 @@ namespace Converters.ViewModels
             set { _shapeControlVm = value; OnPropertyChanged("ShapeControlVm"); }
         }
 
-        
+
 
         public ViewModel()
         {
             Test = "Test";
 
-            Point shapTest = new Point(0,0);
-            shapTest.AddAfter(new Point(100,100));
-            shapTest.Next.AddAfter(new Point(200,10));
+            Point shapTest = new Point(0, 0);
+            Point beginPoint = shapTest;
+            for (int i = 0; i < 10000; i++, shapTest++)
+            {
+                shapTest.Next = new Point(
+                    i,
+                    0 + 50 * Math.Tan(i * 0.2)
+                    );
+            }
 
-            ShapeControlVm = new ShapeControlViewModel();
 
-            ShapeControlVm.Shape = shapTest;
+            var t = new ShapeControlViewModel();
+            t.Shape = beginPoint;
+            ShapeControlVm = t;
+
 
         }
 
