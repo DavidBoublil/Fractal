@@ -11,13 +11,13 @@ namespace Converters.Models
         /// <summary>
         /// Create a fractal on a base shape from a model
         /// </summary>
-        public static void CreateFractal(Model model, Point shape, int iteration)
+        public static void CreateFractal(Model model, NPoint shape, int iteration)
         {
             // Fractal's number of iterations
             for (int i = 0; i < iteration; i++)
             {
                 // Support non-closed shapes
-                for (Point current = shape.Next; current?.Next != null && current != shape; current++ )
+                for (NPoint current = shape.Next; current?.Next != null && current != shape; current++ )
                 {
                     // Apply the pattern between the two points
                     model.ApplyModel(current.Previous, current);

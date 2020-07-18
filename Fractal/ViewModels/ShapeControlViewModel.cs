@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -13,81 +14,85 @@ namespace Converters.ViewModels
 {
     public class ShapeControlViewModel : INotifyPropertyChanged
     {
-        private int _cornerRadius;
-        public int CornerRadius
-        {
-            get => _cornerRadius;
-            set { _cornerRadius = value; OnPropertyChanged("CornerRadius"); }
-        }
+        public NPoint _originPoint;
+        private NPoint _shape;
+        private double _scale;
 
-        private Brush _backgroundColor;
-        public Brush BackgroundColor
+        public NPoint OriginPoint
         {
-            get => _backgroundColor;
-            set { _backgroundColor = value; OnPropertyChanged(("BackgroundColor")); }
-        }
-
-        public Point OriginPoint
-        {
-            get => new Point(XOrigin, YOrigin);
+            get => _originPoint;
             set
             {
-                XOrigin = value.X;
-                YOrigin = value.Y;
+                _originPoint = value;
+                Update();
                 OnPropertyChanged("OriginPoint");
             }
         }
-
-        private double _xOrigin;
-        public double XOrigin
-        {
-            get { return _xOrigin; }
-            set { _xOrigin = value; OnPropertyChanged("XOrigin"); }
-        }
-
-        private double _yOrigin;
-        public double YOrigin
-        {
-            get { return _yOrigin; }
-            set { _yOrigin = value; OnPropertyChanged("YOrigin"); }
-        }
-
-        private Point _shape;
-        public Point Shape
+        public NPoint Shape
         {
             get => _shape;
-            set { _shape = value; 
-                OnPropertyChanged("Shape"); }
+            set
+            {
+                _shape = value;
+                Update();
+                OnPropertyChanged("Shape");
+            }
         }
-
-        private double _scale;
-
         public double Scale
         {
             get { return _scale; }
-            set { _scale = value; OnPropertyChanged(nameof(Scale)); }
+            set
+            {
+                _scale = value;
+                Update();
+                OnPropertyChanged(nameof(Scale));
+            }
         }
 
-
+        public ObservableCollection<NPoint> PointsList { get; set; }
 
         public ICommand UpdateOriginCommand { get; set; }
         public void UpdateOrigin(object param)
         {
             Canvas canvas = param as Canvas;
-            var p = Mouse.GetPosition(canvas);
+            var mousePosition = Mouse.GetPosition(canvas);
+            OriginPoint.X = mousePosition.X;
+            OriginPoint.Y = mousePosition.Y;
+            Update();
+        }
 
-            XOrigin = p.X;
-            YOrigin = p.Y;
+        public void Update()
+        {
+            int i = 0;
+            for (NPoint iterator = Shape; iterator != null; iterator++, i++)
+            {
+                var x = iterator.X;
+                var y = iterator.Y;
+
+                // rescale 
+                x *= Scale;
+                y *= Scale;
+
+                // relocate around origin
+                x += OriginPoint.X;
+                y += OriginPoint.Y;
+
+                // Update the entry in the list
+                while (PointsList.Count <= i)
+                    PointsList.Add(new NPoint());
+
+                NPoint entry = PointsList[i];
+                entry.X = x;
+                entry.Y = y;
+            }
         }
 
         public ShapeControlViewModel()
         {
-            XOrigin = 50;
-            YOrigin = 50;
+            OriginPoint = new NPoint(50, 50);
             Scale = 1;
 
-            BackgroundColor = Brushes.AliceBlue;
-            CornerRadius = 10;
+            PointsList = new ObservableCollection<NPoint>();
 
             //Commands
             UpdateOriginCommand = new RelayCommand(UpdateOrigin);

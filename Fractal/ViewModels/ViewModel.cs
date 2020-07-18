@@ -32,22 +32,17 @@ namespace Converters.ViewModels
         {
             Test = "Test";
 
-            Point shapTest = new Point(0, 0);
-            Point beginPoint = shapTest;
-            for (int i = 0; i < 10000; i++, shapTest++)
+            NPoint shapTest = new NPoint(0, 0);
+            NPoint iterator = shapTest;
+            
+            for (int i = 0; i < 1000; i++, iterator++)
             {
-                shapTest.Next = new Point(
-                    i,
-                    0 + 50 * Math.Tan(i * 0.2)
-                    );
+                iterator.Next = new NPoint(i * 4, 50 * Math.Sin(i * 0.01));
             }
 
-
             var t = new ShapeControlViewModel();
-            t.Shape = beginPoint;
+            t.Shape = shapTest;
             ShapeControlVm = t;
-
-
         }
 
         #region INotify boiler plate

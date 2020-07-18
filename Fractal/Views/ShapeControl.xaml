@@ -11,7 +11,6 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
-        <local:RelocateCoordinate x:Key="RelocateCoordinate"/>
         <local:NullToHidden x:Key="NullToHidden"/>
     </UserControl.Resources>
     <Grid>
@@ -28,11 +27,18 @@
                 <Canvas.InputBindings>
                     <MouseBinding Gesture="LeftClick" Command="{Binding UpdateOriginCommand}" CommandParameter="{Binding ElementName=DrawingCanvas}"/>
                 </Canvas.InputBindings>
+                <Line Stroke="gray" StrokeDashArray="2 2" StrokeThickness="1" 
+                X1="0" X2="{Binding ElementName=DrawingCanvas, Path=ActualWidth}"
+                Y1="{Binding OriginPoint.Y}" Y2="{Binding OriginPoint.Y}"/>
+                <Line Stroke="gray" StrokeDashArray="2 2" StrokeThickness="1"
+                X1="{Binding OriginPoint.X}" X2="{Binding OriginPoint.X}"
+                Y1="0" Y2="{Binding ElementName=DrawingCanvas, Path=ActualHeight}"/>
+                <Ellipse Fill="Black" Width="8" Height="8" Margin="-4" Canvas.Left="{Binding OriginPoint.X}" Canvas.Top="{Binding OriginPoint.Y}"/>
 
-                <ItemsControl x:Name="PointsView" ItemsSource="{Binding Shape}">
+                <ItemsControl x:Name="PointsView" ItemsSource="{Binding PointsList}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Ellipse Width="8" Height="8" Margin="-4" Fill="Blue"/>
+                            <Ellipse Width="4" Height="4" Margin="-2" Fill="Blue"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                     <ItemsControl.ItemsPanel>
@@ -42,36 +48,21 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemContainerStyle>
                         <Style>
-                            <Setter Property="Canvas.Left" >
-                                <Setter.Value>
-                                    <MultiBinding Converter="{StaticResource RelocateCoordinate}" >
-                                        <Binding Path="X"/>
-                                        <Binding ElementName="DrawingCanvas" Path="DataContext.XOrigin"/>
-                                        <Binding ElementName="DrawingCanvas" Path="DataContext.Scale"/>
-                                    </MultiBinding>
-                                </Setter.Value>
-                            </Setter>
-                            <Setter Property="Canvas.Top">
-                                <Setter.Value>
-                                    <MultiBinding Converter="{StaticResource RelocateCoordinate}" >
-                                        <Binding Path="Y"/>
-                                        <Binding ElementName="DrawingCanvas" Path="DataContext.YOrigin"/>
-                                    </MultiBinding>
-                                </Setter.Value>
-                            </Setter>
+                            <Setter Property="Canvas.Left" Value="{Binding X}"/>
+                            <Setter Property="Canvas.Top" Value="{Binding Y}"/>
                         </Style>
                     </ItemsControl.ItemContainerStyle>
 
                 </ItemsControl>
 
-                <ItemsControl x:Name="LineView" ItemsSource="{Binding Shape}" Visibility="Hidden">
+                <!--<ItemsControl x:Name="LineView" ItemsSource="{Binding Shape}" Visibility="Hidden">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Line Stroke="black" StrokeThickness="2" Visibility="{Binding Next, Converter={StaticResource NullToHidden}}">
                                 <Line.X1>
                                     <MultiBinding Converter="{StaticResource RelocateCoordinate}" ConverterParameter="x1" >
                                         <Binding Path="X"/>
-                                        <Binding ElementName="DrawingCanvas" Path="DataContext.XOrigin"/>
+                                        <Binding ElementName="DrawingCanvas" Path="DataContext.OriginPoint.X"/>
                                         <Binding ElementName="DrawingCanvas" Path="DataContext.Scale"/>
                                     </MultiBinding>
                                 </Line.X1>
@@ -103,14 +94,7 @@
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
 
-                </ItemsControl>
-
-                <Line Stroke="gray" StrokeDashArray="2 2" StrokeThickness="1" 
-                X1="0" X2="{Binding ElementName=DrawingCanvas, Path=ActualWidth}"
-                Y1="{Binding YOrigin}" Y2="{Binding YOrigin}"/>
-                <Line Stroke="gray" StrokeDashArray="2 2" StrokeThickness="1"
-                      X1="{Binding XOrigin}" X2="{Binding XOrigin}"
-                      Y1="0" Y2="{Binding ElementName=DrawingCanvas, Path=ActualHeight}"/>
+                </ItemsControl>-->
 
             </Canvas>
         </Border>
