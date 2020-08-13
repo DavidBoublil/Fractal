@@ -11,13 +11,47 @@
         Background="LightGray">
 
     <Window.DataContext>
-        <viewModels:ViewModel/>
+        <viewModels:MainViewModel/>
     </Window.DataContext>
 
+    <Window.Resources>
+        <Style TargetType="Line">
+            <Setter Property="Stroke" Value="Black"/>
+            <Setter Property="StrokeThickness" Value="1"/>
+        </Style>
+    </Window.Resources>
+
     <Grid Margin="1,0">
-        <Grid.ColumnDefinitions> 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="88*"/>
+            <ColumnDefinition Width="293*"/>
+            <ColumnDefinition Width="409*"/>
         </Grid.ColumnDefinitions>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="99,10,0,0" TextWrapping="Wrap" Text="{Binding Test, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
-        <views:ShapeControl DataContext="{Binding ShapeControlVm}" Margin="99,53" />
+        <StackPanel x:Name="Controls" Margin="10,0,5,0">
+            <TextBox  TextWrapping="Wrap" Text="{Binding Test, UpdateSourceTrigger=PropertyChanged}"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Iterations: "/>
+                <TextBlock Text="{Binding Iterations}"/>
+            </StackPanel>
+            <Slider Value="{Binding Iterations}" Minimum="0" Maximum="7"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Vertices: "/>
+                <TextBlock Text="{Binding Vertices}"/>
+            </StackPanel>
+            <Slider Value="{Binding Vertices}" Minimum="3" Maximum="20"/>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Radius: "/>
+                <TextBlock Text="{Binding Radius}"/>
+            </StackPanel>
+            <Slider Value="{Binding Radius}" Minimum="100" Maximum="1000"/>
+
+            <Button Content="Apply" Command="{Binding ApplyCommand}"/>
+        </StackPanel>
+        <GridSplitter Grid.Column="2" HorizontalAlignment="Left" Width="2"/>
+
+        <views:ShapeControl DataContext="{Binding ShapeShapeControlVm}" Margin="10" Grid.Column="2" />
+        <views:ShapeControl DataContext="{Binding ModelShapeControlVm }" Margin="7,10,5,10" Grid.Column="1" />
+
     </Grid>
 </Window>

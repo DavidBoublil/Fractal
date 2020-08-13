@@ -71,7 +71,7 @@
       <DependentUpon>ShapeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\ShapeControlViewModel.cs" />
-    <Compile Include="ViewModels\ViewModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Converters.Models;
+using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using Converters.Models;
 
 namespace Converters.ViewModels
 {
@@ -64,7 +61,7 @@ namespace Converters.ViewModels
         public void Update()
         {
             int i = 0;
-            for (NPoint iterator = Shape; iterator != null; iterator++, i++)
+            for (NPoint iterator = Shape; iterator != null ; iterator++, i++)
             {
                 var x = iterator.X;
                 var y = iterator.Y;
@@ -75,16 +72,43 @@ namespace Converters.ViewModels
 
                 // relocate around origin
                 x += OriginPoint.X;
-                y += OriginPoint.Y;
+                y = OriginPoint.Y - y; // due to the nature of UI elements to have inverted axis
 
                 // Update the entry in the list
-                while (PointsList.Count <= i)
+                if (PointsList.Count <= i)
+                {
+                    var p = new NPoint();
                     PointsList.Add(new NPoint());
+                }
 
                 NPoint entry = PointsList[i];
                 entry.X = x;
                 entry.Y = y;
+
+                // Circle case
+                if (iterator == Shape && i != 0)
+                {
+                    PointsList[0].AddBefore(PointsList.Last());
+                    break;
+                }
             }
+            
+            if (PointsList != null)
+                RemoveUnnecessaryPoints(Math.Max(0, PointsList.Count - i));
+        }
+
+        private void RemoveUnnecessaryPoints(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                PointsList.Remove(PointsList.Last());
+            }
+        }
+
+        private void UpdatePointCount(int count)
+        {
+            while (PointsList.Count <= count)
+                PointsList.Add(new NPoint());
         }
 
         public ShapeControlViewModel()
@@ -93,6 +117,13 @@ namespace Converters.ViewModels
             Scale = 1;
 
             PointsList = new ObservableCollection<NPoint>();
+            PointsList.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) =>
+                {
+                    if (e.Action == NotifyCollectionChangedAction.Add && PointsList.Count > 1)
+                    {
+                        PointsList[PointsList.Count - 2].AddAfter(PointsList.Last());
+                    }
+                };
 
             //Commands
             UpdateOriginCommand = new RelayCommand(UpdateOrigin);
