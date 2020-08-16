@@ -75,6 +75,7 @@ namespace Converters.ViewModels
             for (int i = 0; i < Iterations; i++)
             {
                 // todo: fractal here
+
             }
 
             ShapeShapeControlVm.Shape = first;
@@ -90,10 +91,12 @@ namespace Converters.ViewModels
 
             Test = "Test";
 
+
+
             NPoint shapTest = new NPoint(0, 0);
             NPoint iterator = shapTest;
 
-            int rand = 10000;
+            int rand = 10000/2;
             int radius = 500;
             Random random = new Random((int)DateTime.Now.Ticks);
             for (int i = 0; i < rand;)
@@ -112,6 +115,19 @@ namespace Converters.ViewModels
             var t = new ShapeControlViewModel();
             t.Shape = shapTest;
             ShapeShapeControlVm = t;
+
+
+            // Init shape VM
+            NPoint first = new NPoint(0,0);
+            var it = first.AddAfter(new NPoint(2,0));
+            it = it.AddAfter(new NPoint(3, 6));
+            it = it.AddAfter(new NPoint(4, 0));
+            it = it.AddAfter(new NPoint(6, 0));
+
+            ModelShapeControlVm = new ShapeControlViewModel()
+            {
+                Shape = first
+            };
         }
 
         #region INotify boiler plate

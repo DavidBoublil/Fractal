@@ -40,29 +40,33 @@ namespace Converters.Models
         public bool IsFirst => Previous == null;
         public bool IsLast => Next == null;
 
-        public void AddAfter(NPoint p)
+        public NPoint AddAfter(NPoint p)
         {
             Next = p;
             p.Previous = this;
+            return p;
         }
 
         public NPoint GetCopy() => new NPoint(X, Y);
 
-        public void AddBefore(NPoint p)
+        public NPoint AddBefore(NPoint p)
         {
             Previous = p;
             p.Next = this;
+            return p;
         }
 
-        public void InsertAfter(NPoint p)
+        public NPoint InsertAfter(NPoint p)
         {
             Next?.AddBefore(p);
             AddAfter(p);
+            return p;
         }
-        public void InsertBefore(NPoint p)
+        public NPoint InsertBefore(NPoint p)
         {
             Previous?.AddAfter(p);
             AddBefore(p);
+            return p;
         }
 
         public void InsertRangeAfter(NPoint a, NPoint b)
