@@ -27,15 +27,15 @@
                 </Canvas.InputBindings>
 
 
-                <Line Stroke="gray" StrokeDashArray="2 2" StrokeThickness="1" 
+                <Line x:Name="horizontalOriginLine" Stroke="gray" StrokeDashArray="2 2" StrokeThickness="1" 
                 X1="0" X2="{Binding ElementName=DrawingCanvas, Path=ActualWidth}"
                 Y1="{Binding OriginPoint.Y}" Y2="{Binding OriginPoint.Y}"/>
 
-                <Line Stroke="gray" StrokeDashArray="2 2" StrokeThickness="1"
+                <Line x:Name="verticalOriginLine" Stroke="gray" StrokeDashArray="2 2" StrokeThickness="1"
                 X1="{Binding OriginPoint.X}" X2="{Binding OriginPoint.X}"
                 Y1="0" Y2="{Binding ElementName=DrawingCanvas, Path=ActualHeight}"/>
 
-                <Ellipse Fill="Black" Width="8" Height="8" Margin="-4" Canvas.Left="{Binding OriginPoint.X}" Canvas.Top="{Binding OriginPoint.Y}"/>
+                <Ellipse x:Name="originPoint" Fill="Black" Width="8" Height="8" Margin="-4" Canvas.Left="{Binding OriginPoint.X}" Canvas.Top="{Binding OriginPoint.Y}"/>
 
                 <ItemsControl x:Name="LineView"  ItemsSource="{Binding PointsList}" Visibility="{Binding LinesVisible, Converter= {StaticResource BoolToVisibility}}">
                     <ItemsControl.ItemTemplate>
@@ -69,7 +69,12 @@
                     </ItemsControl.ItemContainerStyle>
                 </ItemsControl>
 
-                <Border x:Name="Parameters" Background="LightGray" CornerRadius="10" BorderThickness="1" BorderBrush="Gray">
+                <Border x:Name="Parameters" Margin="10"  CornerRadius="10" BorderThickness="1" BorderBrush="Gray">
+                    
+                    <Border.Background>
+                        <SolidColorBrush Color="LightGray" Opacity="0.8"/>
+                    </Border.Background>
+                    
                     <StackPanel Orientation="Vertical" Margin="10">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Scale: " Foreground="Blue" FontWeight="Bold"/>

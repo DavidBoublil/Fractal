@@ -119,10 +119,10 @@ namespace Converters.ViewModels
 
             // Init shape VM
             NPoint first = new NPoint(0,0);
-            var it = first.AddAfter(new NPoint(2,0));
-            it = it.AddAfter(new NPoint(3, 6));
-            it = it.AddAfter(new NPoint(4, 0));
-            it = it.AddAfter(new NPoint(6, 0));
+            var it = first.AddAfter(new NPoint(20,0));
+            it = it.AddAfter(new NPoint(30, 60));
+            it = it.AddAfter(new NPoint(40, 0));
+            it = it.AddAfter(new NPoint(60, 0));
 
             ModelShapeControlVm = new ShapeControlViewModel()
             {
