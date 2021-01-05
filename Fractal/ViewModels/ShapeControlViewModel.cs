@@ -14,6 +14,11 @@ namespace Converters.ViewModels
         public NPoint _originPoint;
         private NPoint _shape;
         private double _scale;
+        private bool _pointsVisible;
+        private bool _linesVisible;
+
+
+
 
         public NPoint OriginPoint
         {
@@ -45,6 +50,16 @@ namespace Converters.ViewModels
                 OnPropertyChanged(nameof(Scale));
             }
         }
+        public bool PointsVisible
+        {
+            get { return _pointsVisible; }
+            set { _pointsVisible = value; OnPropertyChanged(nameof(PointsVisible)); }
+        }
+        public bool LinesVisible
+        {
+            get { return _linesVisible; }
+            set { _linesVisible = value; OnPropertyChanged(nameof(LinesVisible)); }
+        }
 
         public ObservableCollection<NPoint> PointsList { get; set; }
 
@@ -61,7 +76,7 @@ namespace Converters.ViewModels
         public void Update()
         {
             int i = 0;
-            for (NPoint iterator = Shape; iterator != null ; iterator++, i++)
+            for (NPoint iterator = Shape; iterator != null; iterator++, i++)
             {
                 var x = iterator.X;
                 var y = iterator.Y;
@@ -92,7 +107,7 @@ namespace Converters.ViewModels
                     break;
                 }
             }
-            
+
             if (PointsList != null)
                 RemoveUnnecessaryPoints(Math.Max(0, PointsList.Count - i));
         }
@@ -115,15 +130,17 @@ namespace Converters.ViewModels
         {
             OriginPoint = new NPoint(50, 50);
             Scale = 1;
+            PointsVisible = true;
+            LinesVisible = true;
 
             PointsList = new ObservableCollection<NPoint>();
             PointsList.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) =>
+            {
+                if (e.Action == NotifyCollectionChangedAction.Add && PointsList.Count > 1)
                 {
-                    if (e.Action == NotifyCollectionChangedAction.Add && PointsList.Count > 1)
-                    {
-                        PointsList[PointsList.Count - 2].AddAfter(PointsList.Last());
-                    }
-                };
+                    PointsList[PointsList.Count - 2].AddAfter(PointsList.Last());
+                }
+            };
 
             //Commands
             UpdateOriginCommand = new RelayCommand(UpdateOrigin);

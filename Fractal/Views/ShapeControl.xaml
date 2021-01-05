@@ -12,6 +12,7 @@
 
     <UserControl.Resources>
         <local:NullToHidden x:Key="NullToHidden"/>
+        <local:BoolToVisibility x:Key="BoolToVisibility"/>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -25,10 +26,6 @@
                     <MouseBinding Gesture="LeftClick" Command="{Binding UpdateOriginCommand}" CommandParameter="{Binding ElementName=DrawingCanvas}"/>
                 </Canvas.InputBindings>
 
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Scale: " Foreground="Blue" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding Scale}" Foreground="Blue" FontWeight="Bold"/>
-                </StackPanel>
 
                 <Line Stroke="gray" StrokeDashArray="2 2" StrokeThickness="1" 
                 X1="0" X2="{Binding ElementName=DrawingCanvas, Path=ActualWidth}"
@@ -40,7 +37,7 @@
 
                 <Ellipse Fill="Black" Width="8" Height="8" Margin="-4" Canvas.Left="{Binding OriginPoint.X}" Canvas.Top="{Binding OriginPoint.Y}"/>
 
-                <ItemsControl x:Name="LineView"  ItemsSource="{Binding PointsList}">
+                <ItemsControl x:Name="LineView"  ItemsSource="{Binding PointsList}" Visibility="{Binding LinesVisible, Converter= {StaticResource BoolToVisibility}}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Line Stroke="Black" StrokeThickness="1" X1="{Binding Next.Previous.X}" Y1="{Binding Next.Previous.Y}" X2="{Binding Next.X}" Y2="{Binding Next.Y}"/>
@@ -53,7 +50,7 @@
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
 
-                <ItemsControl x:Name="PointsView" ItemsSource="{Binding PointsList}">
+                <ItemsControl x:Name="PointsView" ItemsSource="{Binding PointsList}" Visibility="{Binding PointsVisible, Converter= {StaticResource BoolToVisibility}}" >
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Ellipse Width="4" Height="4" Margin="-2" Fill="Blue"/>
@@ -70,12 +67,23 @@
                             <Setter Property="Canvas.Top" Value="{Binding Y}"/>
                         </Style>
                     </ItemsControl.ItemContainerStyle>
-
                 </ItemsControl>
 
+                <Border x:Name="Parameters" Background="LightGray" CornerRadius="10" BorderThickness="1" BorderBrush="Gray">
+                    <StackPanel Orientation="Vertical" Margin="10">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Scale: " Foreground="Blue" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding Scale}" Foreground="Blue" FontWeight="Bold"/>
+                        </StackPanel>
+                        <CheckBox Content="Points Visible" IsChecked="{Binding PointsVisible}" />
+                        <CheckBox Content="Lines Visible" IsChecked="{Binding LinesVisible}" />
+                    </StackPanel>
+                </Border>
+
             </Canvas>
+
         </Border>
-        <Slider x:Name="slider" Grid.Row="1" Margin="0,8,0,0" Value="{Binding Scale}" Minimum="0.001" Maximum="100"/>
+        <Slider x:Name="slider" Grid.Row="1" Margin="0,8,0,0" Value="{Binding Scale}" Minimum="0.001" Maximum="4"/>
 
 
     </Grid>

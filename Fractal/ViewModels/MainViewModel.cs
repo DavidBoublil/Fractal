@@ -96,7 +96,7 @@ namespace Converters.ViewModels
             NPoint shapTest = new NPoint(0, 0);
             NPoint iterator = shapTest;
 
-            int rand = 10000/2;
+            int rand = 100/2;
             int radius = 500;
             Random random = new Random((int)DateTime.Now.Ticks);
             for (int i = 0; i < rand;)
