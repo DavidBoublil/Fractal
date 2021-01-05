@@ -128,7 +128,7 @@ namespace Converters.ViewModels
 
         public ShapeControlViewModel()
         {
-            OriginPoint = new NPoint(50, 300);
+            OriginPoint = new NPoint(200, 200);
             Scale = 1;
             PointsVisible = true;
             LinesVisible = true;

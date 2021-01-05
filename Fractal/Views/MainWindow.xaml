@@ -24,8 +24,8 @@
     <Grid Margin="1,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="88*"/>
-            <ColumnDefinition Width="293*"/>
-            <ColumnDefinition Width="409*"/>
+            <ColumnDefinition Width="137*"/>
+            <ColumnDefinition Width="565*"/>
         </Grid.ColumnDefinitions>
         <StackPanel x:Name="Controls" Margin="10,0,5,0">
             <TextBox  TextWrapping="Wrap" Text="{Binding Test, UpdateSourceTrigger=PropertyChanged}"/>

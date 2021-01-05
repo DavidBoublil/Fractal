@@ -91,29 +91,46 @@ namespace Converters.ViewModels
 
             Test = "Test";
 
-
-
             NPoint shapTest = new NPoint(0, 0);
             NPoint iterator = shapTest;
 
-            int rand = 100/2;
-            int radius = 500;
+            int rand = 50000;
+            int R = 500;
             Random random = new Random((int)DateTime.Now.Ticks);
-            for (int i = 0; i < rand;)
+
+            var referenceAngle = Math.Asin(1 / Math.PI);
+            for (int i = 0; i < rand;i++)
             {
-                int x = random.Next(-radius, radius);
-                int y = random.Next(-radius, radius);
-                if (x * x + y * y < radius * radius)
+                // Create point in a ractangle W: PI*R H: R
+                double x = random.Next(0, (int)(R * Math.PI));
+                double y = random.Next(0, R);
+
+                // Convert the point to an equilateral triangle W: 2*PI*R H: R
+                var z = Math.Sqrt(x * x + y * y);
+                var angle = Math.Asin(y / z);
+               
+                if(angle > referenceAngle)
                 {
-                    iterator.Next = new NPoint(x, y);
-                    iterator++;
-                    i++;
+                    x =  Math.PI * R + x;
+                    y = R - y;
                 }
+
+                // Convert to a circle with radius R
+                double b = (R - y) * 2 * Math.PI ;
+                var rho = y;
+                var theta = (x / b) * 2 * Math.PI - (y - 2 * Math.PI);
+
+                x = Math.Cos(theta) * rho;
+                y = Math.Sin(theta) * rho;
+
+                iterator.Next = new NPoint(x, y);
+                iterator++;
 
             }
 
             var t = new ShapeControlViewModel();
             t.Shape = shapTest;
+            t.LinesVisible = false;
             ShapeShapeControlVm = t;
 
 
