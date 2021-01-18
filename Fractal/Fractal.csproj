@@ -67,6 +67,7 @@
     <Compile Include="Models\Fractal.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\NPoint.cs" />
+    <Compile Include="TempClass.cs" />
     <Compile Include="Views\ShapeControl.xaml.cs">
       <DependentUpon>ShapeControl.xaml</DependentUpon>
     </Compile>
