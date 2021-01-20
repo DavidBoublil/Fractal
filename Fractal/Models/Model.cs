@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converters.Models
+namespace Fractals
 {
     public class Model
     {
@@ -18,7 +18,7 @@ namespace Converters.Models
         // Return the pattern between the two points
         public Tuple<NPoint, NPoint> Pattern => new Tuple<NPoint, NPoint>(First.Next, Last.Previous);
 
-        public Tuple<NPoint, NPoint> GetCopy()
+        public Tuple<NPoint, NPoint> GetShapeCopy()
         {
             NPoint first = First.GetCopy();
             NPoint last = first;
@@ -39,17 +39,17 @@ namespace Converters.Models
 
         public void ApplyModel(NPoint a, NPoint b)
         {
-            Tuple<NPoint, NPoint> copy = GetCopy();
+            Tuple<NPoint, NPoint> modelShapeCopy = GetShapeCopy();
 
             // Get the angle and distance (optimized function to calculate distance only once)
             double shapeAngle = a.AngleTo(b, out double shapeDistance);
             double scaleFactor = shapeDistance / Distance;
             
-            Rescale(copy, scaleFactor);
-            Rotate(copy, shapeAngle);
+            Rescale(modelShapeCopy, scaleFactor);
+            Rotate(modelShapeCopy, shapeAngle);
 
             // insert
-            a.InsertRangeAfter(copy.Item1.Next, copy.Item2.Previous);
+            a.InsertRangeAfter(modelShapeCopy.Item1.Next, modelShapeCopy.Item2.Previous);
         }
 
         private void Rotate(Tuple<NPoint, NPoint> copy, double shapeAngle)
@@ -74,19 +74,21 @@ namespace Converters.Models
             Rescale(shape.Item1, shape.Item2, scaleFactor);
         }
 
-        public void Rescale(NPoint a, NPoint b, double scaleFactor)
+        public void Rescale(NPoint p1, NPoint p2, double scaleFactor)
         {
             // todo: a is rescalled to it's own place. can be optimized. 
-            NPoint iterator = a;
-            while (iterator != null && iterator.Previous != b)
+            NPoint iterator = p1;
+            while (iterator != null && iterator.Previous != p2)
             {
-                iterator -= a;
+                // move the shape to start from 0,0
+                iterator -= p1;
 
-                a.X *= scaleFactor;
-                a.Y *= scaleFactor;
+                p1.X *= scaleFactor;
+                p1.Y *= scaleFactor;
 
-                iterator++;
-                iterator += a;
+                iterator += p1;
+                if(iterator !=  null)
+                    iterator++;
             }
         }
     }

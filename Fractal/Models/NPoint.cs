@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Converters.Models
+namespace Fractals
 {
     public class NPoint : IEnumerable<NPoint>, INotifyPropertyChanged
     {
@@ -47,7 +47,17 @@ namespace Converters.Models
             return p;
         }
 
-        public NPoint GetCopy() => new NPoint(X, Y);
+        public NPoint GetCopy(bool unique = true) {
+            if(unique)
+                return new Point(X, Y);
+            var toLinked = (from p in this
+                            select p.GetCopy()).ToList();
+
+            for (int i = 1; i < toLinked.Count(); i++)
+                toLinked[i - 1].AddAfter(toLinked[i]);
+
+            return toLinked[0];
+        }
 
         public NPoint AddBefore(NPoint p)
         {
@@ -95,7 +105,7 @@ namespace Converters.Models
 
         public static NPoint operator +(NPoint a, NPoint b) => new NPoint(a.X + b.X, a.Y + b.Y);
         public static NPoint operator -(NPoint a, NPoint b) => new NPoint(a.X - b.X, a.Y - b.Y);
-
+       
         public static implicit operator NPoint(System.Windows.Point p) => new NPoint(p.X, p.Y);
         #endregion
 

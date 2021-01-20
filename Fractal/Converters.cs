@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
-using Point = Converters.Models.NPoint;
+using Point = Fractals.NPoint;
 
 namespace Converters
 {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Converters.Models;
+using Fractals;
 using Temp;
 
 namespace Converters.ViewModels
@@ -56,7 +56,6 @@ namespace Converters.ViewModels
         public void Apply(object param)
         {
             // Create shape with "Vertices" number of vertices
-            
             NPoint iterator = new NPoint(Radius,0);
             NPoint first = iterator;
 
@@ -70,16 +69,90 @@ namespace Converters.ViewModels
                 });
             }
 
+            // link the last point to the firs to create a close shape
             iterator.AddAfter(first);
 
             // Apply Fractal
-            for (int i = 0; i < Iterations; i++)
-            {
-                // todo: fractal here
-
-            }
+            ApplyFractal(first, ModelShapeControlVm.Shape, Iterations);
+            /*var model = new Fractals.Model() { First = ModelShapeControlVm.PointsList.First(), Last = ModelShapeControlVm.PointsList.Last() };
+            Fractals.Fractal.CreateFractal(model, first, Iterations);*/
 
             ShapeShapeControlVm.Shape = first;
+        }
+
+        private void ApplyFractal(NPoint baseShape, NPoint seed, int iterations)
+        {
+            var seed_first_last_dist = seed.DistanceTo(seed.Last()/*check if works*/);
+            for (int i = 0; i < iterations; i++)
+            {
+                NPoint it = baseShape.Next;
+                do
+                {
+                    NPoint p1 = it.Previous;
+                    NPoint p2 = it;
+
+                    // get a copy of the seed
+                    var seed_copy = seed.GetCopy(false);
+                    var seed_copy_last = seed_copy.Last();
+
+                    // calculate usefull data
+                    var angle = p1.AngleTo(p2, out double p1_p2_distance);
+                    var scaleFactor = p1_p2_distance / seed_first_last_dist;
+
+                    var xDst = p1.X - seed_copy.X;
+                    var yDst = p1.Y - seed_copy.Y;
+                    // move copy to be around p1
+                    //for (var sc_it = seed_copy; sc_it!=null && sc_it.Next != seed_copy; sc_it++)
+                    var sc_it = seed_copy;
+                    do
+                    {
+                        sc_it.X += xDst;
+                        sc_it.Y += yDst;
+                        sc_it++;
+                    } while (sc_it != null && sc_it != seed_copy);
+
+                    // rescale seed_copy
+                    sc_it = seed_copy;
+                    do
+                    {
+                        // move the shape to start from 0,0
+                        sc_it.X -= seed_copy.X;
+                        sc_it.Y -= seed_copy.Y;
+
+                        sc_it.X *= scaleFactor;
+                        sc_it.Y *= scaleFactor;
+
+                        // remove it to it's place
+                        sc_it.X += seed_copy.X;
+                        sc_it.Y += seed_copy.Y;
+
+                        // NX = (X - X1) * SF + X1
+                        // NY = (Y - Y1) * SF + Y1
+                        sc_it++;
+                    } while (sc_it != null && sc_it != seed_copy);
+
+                    sc_it = seed_copy;
+                    do
+                    {
+                        // move the shape to start from 0,0
+                        sc_it.X -= seed_copy.X;
+                        sc_it.Y -= seed_copy.Y;
+
+                        var nX = sc_it.X * Math.Cos(angle) - sc_it.Y * Math.Sin(angle);
+                        var nY = sc_it.X * Math.Sin(angle) + sc_it.Y * Math.Cos(angle);
+
+                        sc_it.X = nX + seed_copy.X;
+                        sc_it.Y = nY + seed_copy.Y;
+                        sc_it++;
+                    } while (sc_it != null && sc_it != seed_copy);
+
+
+                    // insert the points
+                    p1.InsertRangeAfter(seed_copy.Next, seed_copy_last.Previous);
+
+                    it++;
+                } while (it != null && it.Previous != baseShape);
+            }
         }
 
         public MainViewModel()
@@ -95,31 +168,15 @@ namespace Converters.ViewModels
             NPoint shapTest = new NPoint(0, 0);
             NPoint iterator = shapTest;
 
-            int rand = 5000;
-            int R = 500;
-            Random random = new Random((int)DateTime.Now.Ticks);
-
-            
-            for (int i = 0; i < rand;i++)
-            {
-                var np = TempClass.RandomPointInCircle(R);
-                iterator.Next = new NPoint(np.Item1, np.Item2);
-                iterator++;
-
-            }
-
             var t = new ShapeControlViewModel();
             t.Shape = shapTest;
-            t.LinesVisible = false;
             t.Scale = 0.3;
             ShapeShapeControlVm = t;
 
 
             // Init shape VM
             NPoint first = new NPoint(0,0);
-            var it = first.AddAfter(new NPoint(20,0));
-            it = it.AddAfter(new NPoint(30, 60));
-            it = it.AddAfter(new NPoint(40, 0));
+            var it = first.AddAfter(new NPoint(30, 60));
             it = it.AddAfter(new NPoint(60, 0));
 
             ModelShapeControlVm = new ShapeControlViewModel()

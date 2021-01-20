@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converters.Models
+namespace Fractals
 {
     public static class Fractal
     {
@@ -16,8 +16,8 @@ namespace Converters.Models
             // Fractal's number of iterations
             for (int i = 0; i < iteration; i++)
             {
-                // Support non-closed shapes
-                for (NPoint current = shape.Next; current?.Next != null && current != shape; current++ )
+                // apply model to each vertice
+                for (NPoint current = shape.Next; current?.Next != null && current != shape/*Support non-closed shapes*/; current++ )
                 {
                     // Apply the pattern between the two points
                     model.ApplyModel(current.Previous, current);
