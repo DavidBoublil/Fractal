@@ -37,12 +37,12 @@ namespace Converters.ViewModels
         public int Iterations
         {
             get { return _iterations; }
-            set { _iterations = value; OnPropertyChanged(nameof(Iterations));}
+            set { _iterations = value; OnPropertyChanged(nameof(Iterations)); }
         }
         public int Vertices
         {
             get { return _vertices; }
-            set { _vertices = value; OnPropertyChanged(nameof(Vertices));}
+            set { _vertices = value; OnPropertyChanged(nameof(Vertices)); }
         }
         public double Radius
         {
@@ -56,10 +56,10 @@ namespace Converters.ViewModels
         public void Apply(object param)
         {
             // Create shape with "Vertices" number of vertices
-            NPoint iterator = new NPoint(Radius,0);
+            NPoint iterator = new NPoint(Radius, 0);
             NPoint first = iterator;
 
-            for (int i = 1; i < Vertices; i++, iterator++)
+            for (int i = Vertices; i > 0; i--, iterator++)
             {
                 double angle = ((2 * Math.PI) / Vertices) * i;
                 iterator.AddAfter(new NPoint()
@@ -73,7 +73,7 @@ namespace Converters.ViewModels
             iterator.AddAfter(first);
 
             // Apply Fractal
-            ApplyFractal(first, ModelShapeControlVm.Shape, Iterations);
+            ApplyFractal2(first, ModelShapeControlVm.Shape, Iterations);
             /*var model = new Fractals.Model() { First = ModelShapeControlVm.PointsList.First(), Last = ModelShapeControlVm.PointsList.Last() };
             Fractals.Fractal.CreateFractal(model, first, Iterations);*/
 
@@ -101,6 +101,7 @@ namespace Converters.ViewModels
 
                     var xDst = p1.X - seed_copy.X;
                     var yDst = p1.Y - seed_copy.Y;
+
                     // move copy to be around p1
                     //for (var sc_it = seed_copy; sc_it!=null && sc_it.Next != seed_copy; sc_it++)
                     var sc_it = seed_copy;
@@ -116,40 +117,113 @@ namespace Converters.ViewModels
                     do
                     {
                         // move the shape to start from 0,0
-                        sc_it.X -= seed_copy.X;
-                        sc_it.Y -= seed_copy.Y;
+                        var nX = sc_it.X - seed_copy.X;
+                        var nY = sc_it.Y - seed_copy.Y;
 
-                        sc_it.X *= scaleFactor;
-                        sc_it.Y *= scaleFactor;
+                        nX *= scaleFactor;
+                        nY *= scaleFactor;
 
                         // remove it to it's place
-                        sc_it.X += seed_copy.X;
-                        sc_it.Y += seed_copy.Y;
+                        sc_it.X = sc_it.X + seed_copy.X;
+                        sc_it.Y = sc_it.Y + seed_copy.Y;
 
                         // NX = (X - X1) * SF + X1
                         // NY = (Y - Y1) * SF + Y1
                         sc_it++;
                     } while (sc_it != null && sc_it != seed_copy);
 
+                    // rotate
                     sc_it = seed_copy;
                     do
                     {
                         // move the shape to start from 0,0
-                        sc_it.X -= seed_copy.X;
-                        sc_it.Y -= seed_copy.Y;
+                        var nX = sc_it.X - seed_copy.X;
+                        var nY = sc_it.Y - seed_copy.Y;
 
-                        var nX = sc_it.X * Math.Cos(angle) - sc_it.Y * Math.Sin(angle);
-                        var nY = sc_it.X * Math.Sin(angle) + sc_it.Y * Math.Cos(angle);
+                        var nnX = nX * Math.Cos(angle) - nY * Math.Sin(angle);
+                        var nnY = nX * Math.Sin(angle) + nY * Math.Cos(angle);
 
-                        sc_it.X = nX + seed_copy.X;
-                        sc_it.Y = nY + seed_copy.Y;
+                        sc_it.X = nnX + seed_copy.X;
+                        sc_it.Y = nnY + seed_copy.Y;
                         sc_it++;
                     } while (sc_it != null && sc_it != seed_copy);
 
 
                     // insert the points
-                    p1.InsertRangeAfter(seed_copy.Next, seed_copy_last.Previous);
+                    p1.InsertRangeAfter(seed_copy, seed_copy_last.Previous);
 
+                    it++;
+                } while (it != null && it.Previous != baseShape);
+            }
+        }
+
+        private void ApplyFractal2(NPoint baseShape, NPoint seed, int iterations)
+        {
+            var seed_first_last_dist = seed.DistanceTo(seed.Last());
+
+            // foreach vertice
+            for (int i = 0; i < iterations; i++)
+            {
+                var it = baseShape.Next;
+                do
+                {
+                    var p1 = it.Previous;
+                    var p2 = it;
+                    var p1_p2_dst = p1.DistanceTo(p2);
+                    var seed_copy = seed.GetCopy(false);
+                    var seed_copy_last = seed_copy.Last();
+
+                    // move the seed copy to be around 0,0
+                    var sc_it = seed_copy;
+                    do
+                    {
+                        sc_it.X -= seed.X;
+                        sc_it.Y -= seed.Y;
+                        sc_it++;
+                    } while (sc_it != null && sc_it != seed_copy);
+
+                    // rescale
+                    var scale_factor = p1_p2_dst / seed_first_last_dist;
+                    sc_it = seed_copy;
+                    do
+                    {
+                        sc_it.X *= scale_factor;
+                        sc_it.Y *= scale_factor;
+
+                        sc_it++;
+                    } while (sc_it != null && sc_it != seed_copy);
+
+
+                    // rotate
+                    var p1_p2_angle = p2.AngleTo(p1);
+                    sc_it = seed_copy;
+                    var pi = Math.PI;
+                    var dg_90 = pi / 2;
+                    do
+                    {
+                        var x = sc_it.X;
+                        var y = sc_it.Y;
+                        var dst = sc_it.DistanceTo(seed_copy);
+                        var ang = seed_copy.AngleTo(sc_it);
+                        if (!Double.IsNaN(ang) && p1_p2_angle < dg_90 && p1_p2_angle > 0)
+                        {
+                            sc_it.X = dst * Math.Cos(pi - (p1_p2_angle + ang));
+                            sc_it.Y = dst * Math.Sin(pi - (p1_p2_angle + ang));
+                        }
+
+                        sc_it++;
+                    } while (sc_it != null && sc_it != seed_copy);
+
+                    // remove the seed copy to be around p1
+                    sc_it = seed_copy;
+                    do
+                    {
+                        sc_it.X += p1.X;
+                        sc_it.Y += p1.Y;
+                        sc_it++;
+                    } while (sc_it != null && sc_it != seed_copy);
+
+                    p1.InsertRangeAfter(seed_copy.Next, seed_copy_last.Previous);
                     it++;
                 } while (it != null && it.Previous != baseShape);
             }
@@ -162,6 +236,7 @@ namespace Converters.ViewModels
             // Default values todo: set them from config
             Vertices = 3;
             Radius = 200;
+            Iterations = 1;
 
             Test = "Test";
 
@@ -170,14 +245,16 @@ namespace Converters.ViewModels
 
             var t = new ShapeControlViewModel();
             t.Shape = shapTest;
-            t.Scale = 0.3;
+            t.Scale = 1;
             ShapeShapeControlVm = t;
 
 
             // Init shape VM
-            NPoint first = new NPoint(0,0);
-            var it = first.AddAfter(new NPoint(30, 60));
+            NPoint first = new NPoint(0, 0);
+            var it = first.AddAfter(new NPoint(30, 0));
+            it = it.AddAfter(new NPoint(45, 45));
             it = it.AddAfter(new NPoint(60, 0));
+            it = it.AddAfter(new NPoint(90, 0));
 
             ModelShapeControlVm = new ShapeControlViewModel()
             {
