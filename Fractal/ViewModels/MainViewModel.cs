@@ -74,8 +74,6 @@ namespace Converters.ViewModels
 
             // Apply Fractal
             ApplyFractal2(first, ModelShapeControlVm.Shape, Iterations);
-            /*var model = new Fractals.Model() { First = ModelShapeControlVm.PointsList.First(), Last = ModelShapeControlVm.PointsList.Last() };
-            Fractals.Fractal.CreateFractal(model, first, Iterations);*/
 
             ShapeShapeControlVm.Shape = first;
         }
@@ -195,21 +193,27 @@ namespace Converters.ViewModels
 
 
                     // rotate
-                    var p1_p2_angle = p2.AngleTo(p1);
+                    var pp1 = p1.GetCopy(true);
+                    var pp2 = p2.GetCopy(true);
+
+                    pp2.X -= pp1.X;
+                    pp2.Y -= pp1.Y;
+                    pp1.X = 0;
+                    pp1.Y = 0;
+
+                    var theta = Math.Atan2(pp2.Y - pp1.Y, pp2.X - pp1.X);
+                   
+
                     sc_it = seed_copy;
                     var pi = Math.PI;
                     var dg_90 = pi / 2;
                     do
                     {
-                        var x = sc_it.X;
-                        var y = sc_it.Y;
-                        var dst = sc_it.DistanceTo(seed_copy);
-                        var ang = seed_copy.AngleTo(sc_it);
-                        if (!Double.IsNaN(ang) && p1_p2_angle < dg_90 && p1_p2_angle > 0)
-                        {
-                            sc_it.X = dst * Math.Cos(pi - (p1_p2_angle + ang));
-                            sc_it.Y = dst * Math.Sin(pi - (p1_p2_angle + ang));
-                        }
+                        var x = sc_it.X * Math.Cos(theta) - sc_it.Y * Math.Sin(theta);
+                        var y = sc_it.X * Math.Sin(theta) + sc_it.Y * Math.Cos(theta);
+
+                        sc_it.X = x;
+                        sc_it.Y = y;
 
                         sc_it++;
                     } while (sc_it != null && sc_it != seed_copy);
@@ -252,7 +256,7 @@ namespace Converters.ViewModels
             // Init shape VM
             NPoint first = new NPoint(0, 0);
             var it = first.AddAfter(new NPoint(30, 0));
-            it = it.AddAfter(new NPoint(45, 45));
+            it = it.AddAfter(new NPoint(45, 30));
             it = it.AddAfter(new NPoint(60, 0));
             it = it.AddAfter(new NPoint(90, 0));
 
